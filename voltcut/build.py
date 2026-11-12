@@ -1,10 +1,13 @@
-"""VOLTCUT — a cyberpunk display typeface, generated from geometry.
+"""VOLTCUT v2 — an aggressive cyberpunk display typeface, generated from geometry.
 
 Run:  python3 build.py   (needs: pip install fonttools brotli skia-pathops)
 
-Every glyph is built from straight-edged primitives (chamfered boxes and
-diagonal strokes), merged with boolean ops, then written out as
-Regular / Oblique / Slit (striped) / Slit Oblique, in TTF + WOFF2.
+Heavy, extended, all-caps. Every glyph is built from straight-edged primitives
+(chamfered boxes, polygons, diagonal strokes) merged with boolean ops.
+Signature details: 45-degree "speed" chamfers, razor-thin counters, stencil
+gaps that detach stems from bowls/bars, and spikes that break the baseline.
+
+Styles written: Regular / Oblique / Slit / Slit Oblique / Glitch (TTF + WOFF2).
 """
 import math
 import os
@@ -12,6 +15,7 @@ import os
 import pathops
 from pathops import Path, PathOp
 from fontTools.fontBuilder import FontBuilder
+from fontTools.misc.timeTools import timestampNow
 from fontTools.pens.ttGlyphPen import TTGlyphPen
 from fontTools.pens.transformPen import TransformPen
 from fontTools.ttLib import TTFont
@@ -19,14 +23,15 @@ from fontTools.ttLib import TTFont
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fonts")
 
 UPM = 1000
-H = 700          # cap height
-S = 128          # vertical stem
-T = 108          # horizontal bar
-C = 112          # big chamfer
-c = 46           # inner chamfer
-SB = 58          # side bearing
+H = 700           # cap height
+S = 172           # vertical stem
+T = 140           # horizontal bar
+C = 150           # big chamfer
+c = 40            # small chamfer
+G = 30            # stencil gap
+SB = 36           # side bearing (tight)
 MID0, MID1 = H / 2 - T / 2, H / 2 + T / 2
-DESC = -150
+W = 780           # standard (extended) body width
 
 
 # ---------------------------------------------------------------- primitives
@@ -52,8 +57,7 @@ def box(x0, y0, x1, y1, tl=0, tr=0, br=0, bl=0):
 def diag(x0, y0, x1, y1, w=S):
     """Diagonal stroke with horizontal end cuts and visual weight ~w."""
     dx, dy = x1 - x0, y1 - y0
-    L = math.hypot(dx, dy)
-    hw = w / 2 * L / abs(dy)  # horizontal half-width
+    hw = w / 2 * math.hypot(dx, dy) / abs(dy)
     return poly([(x0 - hw, y0), (x0 + hw, y0), (x1 + hw, y1), (x1 - hw, y1)])
 
 
@@ -74,355 +78,385 @@ def I(a, b):
     return pathops.op(a, b, PathOp.INTERSECTION)
 
 
-def clipcap(p, w, lo=0, hi=H):
+def band(p, y0, y1):
+    return I(p, box(-1000, y0, 3000, y1))
+
+
+def clip(p, w, lo=0, hi=H):
     return I(p, box(-400, lo, w + 400, hi))
+
+
+def moved(p, dx=0, dy=0):
+    out = Path()
+    p.draw(TransformPen(out.getPen(), (1, 0, 0, 1, dx, dy)))
+    return out
 
 
 def frame(w, tl=C, tr=0, br=C, bl=0, itl=c, itr=0, ibr=c, ibl=0):
     return D(box(0, 0, w, H, tl, tr, br, bl), box(S, T, w - S, H - T, itl, itr, ibr, ibl))
 
 
+def stem(tl=C, br=0, x=0):
+    return box(x, 0, x + S, H, tl=tl, br=br)
+
+
 # ---------------------------------------------------------------- glyphs
-G = {}  # name -> (width, path)
+GL = {}  # name -> (width, path)
 
 
 def glyph(name, w):
     def deco(fn):
-        G[name] = (w, fn(w))
+        GL[name] = (w, fn(w))
         return fn
     return deco
 
 
-W0 = 620   # standard body width
-WN = 560   # narrow
-WW = 800   # wide
-
-@glyph("A", 680)
+# Letters --------------------------------------------------------------------
+@glyph("A", W)
 def _(w):
-    a = diag(S * 0.55, 0, w / 2, H + 40)
-    b = diag(w / 2, H + 40, w - S * 0.55, 0)
-    bar = box(w * 0.22, 150, w * 0.78, 150 + T)
-    return clipcap(U(a, b, bar), w)
+    # lambda form: slanted left flank, flat roof, right stem, no crossbar
+    k = w * 0.40
+    outer = poly([(0, 0), (k, H), (w, H), (w, 0)])
+    inner = poly([(S * 1.15, -1), (k + S * 0.55, H - T), (w - S, H - T), (w - S, -1)])
+    return U(D(outer, inner), poly([(w - S, 0), (w, 0), (w, -90)]))
 
-@glyph("B", W0)
+@glyph("B", W)
 def _(w):
-    b = D(box(0, 0, w, H, tl=C, tr=c * 1.6, br=C),
-          box(S, MID1, w - S, H - T),
-          box(S, T, w - S, MID0, br=c),
-          poly([(w + 1, MID1 + 10), (w - S * 0.5, H / 2), (w + 1, MID0 - 10)]))
-    return b
+    x = S + G
+    bowl = D(box(x, 0, w, H, tr=c * 2, br=C),
+             box(x - 1, T, w - S, MID0), box(x - 1, MID1, w - S, H - T),
+             poly([(w + 1, MID1 - 10), (w - S * 0.55, H / 2), (w + 1, MID0 + 10)]))
+    return U(stem(), bowl)
 
-@glyph("C", W0)
+@glyph("C", W)
 def _(w):
-    return D(frame(w, tl=C, br=0, bl=C, tr=0, itl=c, ibr=0, ibl=c),
-             box(w - S - 1, T, w + 1, H - T))
+    return D(box(0, 0, w, H, tl=C, tr=T * 0.7, br=T * 0.7, bl=C * 0.5),
+             box(S, T, w + 1, H - T, tl=c))
 
-@glyph("D", W0)
+@glyph("D", W)
 def _(w):
-    return frame(w, tl=0, tr=C, br=C, bl=0, itl=0, itr=c, ibr=c)
+    x = S + G
+    return U(stem(), D(box(x, 0, w, H, tr=C, br=C), box(x - 1, T, w - S, H - T, tr=c)))
 
-@glyph("E", 560)
+@glyph("E", W - 60)
 def _(w):
-    return D(box(0, 0, w, H, tl=C),
-             box(S, T, w + 1, MID0), box(S, MID1, w + 1, H - T),
-             box(w * 0.8, MID0 - 1, w + 1, MID1 + 1))
+    x = S + G
+    return U(stem(), box(x, H - T, w, H), box(x, MID0, w * 0.84, MID1, tr=c),
+             box(x, 0, w, T, br=T * 0.8))
 
-@glyph("F", 540)
+@glyph("F", W - 80)
 def _(w):
-    return D(box(0, 0, w, H, tl=C),
-             box(S, -1, w + 1, MID0), box(S, MID1, w + 1, H - T),
-             box(w * 0.8, MID0 - 1, w + 1, MID1 + 1))
+    x = S + G
+    return U(stem(), box(x, H - T, w, H, br=T * 0.8), box(x, MID0, w * 0.84, MID1, tr=c))
 
-@glyph("G", W0)
+@glyph("G", W)
 def _(w):
-    f = D(frame(w, tl=C, br=C, bl=0, itl=c, ibr=c), box(w - S - 1, MID1, w + 1, H - T))
-    return U(f, box(w * 0.46, MID0, w, MID1))
+    g = D(box(0, 0, w, H, tl=C, br=C, tr=T * 0.7),
+          box(S, T, w - S, H - T, tl=c), box(w - S - 1, MID1 - 1, w + 1, H - T))
+    return U(g, box(w * 0.48, MID0, w, MID1))
 
-@glyph("H", W0)
+@glyph("H", W)
 def _(w):
-    return U(box(0, 0, S, H, tl=C * 0.8), box(w - S, 0, w, H, br=C * 0.8), box(0, MID0, w, MID1))
+    return U(stem(), stem(tl=0, br=C, x=w - S), box(S + G, MID0, w - S - G, MID1))
 
 @glyph("I", S)
 def _(w):
-    return box(0, 0, S, H, tl=C * 0.8, br=C * 0.8)
+    return box(0, 0, S, H, tl=C * 0.9, br=C * 0.9)
 
-@glyph("J", 580)
+@glyph("J", W - 60)
 def _(w):
-    return D(frame(w, tl=0, br=C, bl=C, tr=C * 0.8, itl=0, ibr=c, ibl=c),
-             box(S, T, w - S, H + 1), box(-1, H * 0.42, S + 1, H + 1))
+    j = D(box(0, 0, w, H, br=C, bl=C * 0.5), box(-1, T, w - S, H + 1))
+    return U(j, box(0, T + G, S, H * 0.45, tl=c))
 
-@glyph("K", 640)
+@glyph("K", W)
 def _(w):
-    up = diag(S + 40, H / 2, w - S * 0.55, H + 10)
-    lo = diag(S + 40, H / 2, w - S * 0.55, -10)
-    return U(box(0, 0, S, H, tl=C * 0.8), clipcap(U(up, lo, box(S - 1, MID0, S + 120, MID1)), w))
+    x = S + G
+    arms = U(diag(x + 70, H / 2, w - S * 0.55, H + 20), diag(x + 70, H / 2, w - S * 0.55, -20))
+    arms = I(arms, box(x, 0, w + 200, H))
+    spike = poly([(w - S * 1.05, 0), (w, 0), (w + 30, -90)])
+    return U(stem(), clip(arms, w), spike)
 
-@glyph("L", 540)
+@glyph("L", W - 80)
 def _(w):
-    return D(box(0, 0, w, H, tl=C * 0.8, br=C * 0.8), box(S, T, w + 1, H + 1))
+    return U(stem(), box(0, 0, w, T, br=T * 0.9))
 
-@glyph("M", WW)
+@glyph("M", W + 200)
 def _(w):
     m = (w - S) / 2
     return D(box(0, 0, w, H, tl=C, tr=C),
              box(S, -1, m, H - T), box(m + S, -1, w - S, H - T),
-             box(m - 1, -1, m + S + 1, H * 0.3))
+             box(m - 1, -1, m + S + 1, H * 0.34))
 
-@glyph("N", 660)
+@glyph("N", W)
 def _(w):
-    d = diag(S * 0.55 + 20, H, w - S * 0.55 - 20, 0, w=S * 1.05)
-    return I(U(box(0, 0, S, H), box(w - S, 0, w, H), d), box(0, 0, w, H, tl=C * 0.8, br=C * 0.8))
+    n = D(box(0, 0, w, H, tl=C, br=C * 0.6), box(S, -1, w - S, H - T))
+    return U(n, poly([(S, H - T), (S + T, H - T), (S, H - T - T)]))
 
-@glyph("O", W0 + 40)
+@glyph("O", W)
 def _(w):
     return frame(w)
 
-@glyph("P", W0 - 20)
+@glyph("P", W)
 def _(w):
-    bowl = D(box(0, MID0, w, H, tl=C, br=C * 0.8), box(S, MID1, w - S, H - T, br=c))
-    return U(bowl, box(0, 0, S, H, tl=C))
+    x = S + G
+    return U(stem(), D(box(x, MID0, w, H, br=C), box(x - 1, MID1, w - S, H - T, br=c)))
 
-@glyph("Q", W0 + 40)
+@glyph("Q", W)
 def _(w):
-    return U(frame(w, br=0), box(w * 0.56, -110, w, T, br=C * 0.7))
+    return U(frame(w, br=0), poly([(w * 0.45, T), (w, T), (w + 40, -110), (w * 0.45, 0)]))
 
-@glyph("R", W0)
+@glyph("R", W)
 def _(w):
-    bowl = D(box(0, MID0, w, H, tl=C, br=C * 0.8), box(S, MID1, w - S, H - T, br=c))
-    leg = clipcap(diag(w * 0.42, H / 2, w - S * 0.55, -10), w, 0, MID0 + 1)
-    return U(bowl, box(0, 0, S, H, tl=C), leg)
+    x = S + G
+    bowl = D(box(x, MID0, w, H, br=C * 0.6), box(x - 1, MID1, w - S, H - T, br=c))
+    leg = poly([(w - S, MID0 - G), (w, MID0 - G), (w + 30, -100), (w - S, 0)])
+    return U(stem(), bowl, leg)
 
-@glyph("S", W0)
+@glyph("S", W)
 def _(w):
     return D(box(0, 0, w, H, tl=C, br=C),
              box(S, MID1, w + 1, H - T, tl=c), box(-1, T, w - S, MID0, br=c))
 
-@glyph("T", 640)
+@glyph("T", W)
 def _(w):
-    return U(box(0, H - T, w, H, tl=C * 0.8), box(w / 2 - S / 2, 0, w / 2 + S / 2, H, br=c))
+    return U(box(0, H - T, w, H, tl=C), box(w / 2 - S / 2, 0, w / 2 + S / 2, H - T - G, br=c))
 
-@glyph("U", W0)
+@glyph("U", W)
 def _(w):
-    return D(frame(w, tl=C * 0.8, tr=0, br=C, bl=0), box(S, T + 1, w - S, H + 1))
+    return D(box(0, 0, w, H, tl=C * 0.7, br=C), box(S, T, w - S, H + 1, bl=c))
 
-@glyph("V", 680)
+@glyph("V", W)
 def _(w):
-    a = diag(S * 0.55, H, w / 2, -40)
-    b = diag(w / 2, -40, w - S * 0.55, H)
-    return clipcap(U(a, b), w)
+    k = 0.38
+    outer = poly([(0, H), (w, H), (w * (1 - k), 0), (w * k, 0)])
+    off = S * 1.2
+    yb = T * 1.25
+    lx = lambda y: off + w * k * (1 - y / H)
+    inner = poly([(off, H + 1), (w - off, H + 1), (w - lx(yb), yb), (lx(yb), yb)])
+    return D(outer, inner)
 
-@glyph("W", WW + 40)
+@glyph("W", W + 220)
 def _(w):
     m = (w - S) / 2
-    return D(box(0, 0, w, H, tl=C, br=C),
+    return D(box(0, 0, w, H, bl=C, br=C),
              box(S, T, m, H + 1), box(m + S, T, w - S, H + 1),
-             box(m - 1, H * 0.7, m + S + 1, H + 1))
+             box(m - 1, H * 0.62, m + S + 1, H + 1))
 
-@glyph("X", 680)
+@glyph("X", W)
 def _(w):
-    return clipcap(U(diag(S * 0.55, H, w - S * 0.55, 0), diag(S * 0.55, 0, w - S * 0.55, H)), w)
+    x = clip(U(diag(S * 0.6, H, w - S * 0.6, 0, w=S * 1.1), diag(S * 0.6, 0, w - S * 0.6, H, w=S * 1.1)), w)
+    return D(x, box(-1, H / 2 - G / 2, w + 1, H / 2 + G / 2))
 
-@glyph("Y", 680)
+@glyph("Y", W)
 def _(w):
-    a = diag(S * 0.55, H, w / 2, H * 0.42)
-    b = diag(w - S * 0.55, H, w / 2, H * 0.42)
-    return U(clipcap(U(a, b), w), box(w / 2 - S / 2, 0, w / 2 + S / 2, H * 0.45, br=c))
+    y0 = H * 0.42
+    k = 0.30
+    outer = poly([(0, H), (w, H), (w * (1 - k), y0), (w * k, y0)])
+    off = S * 1.2
+    lx = lambda y: off + (w * k) * (H - y) / (H - y0)
+    yb = y0 + T
+    inner = poly([(off, H + 1), (w - off, H + 1), (w - lx(yb), yb), (lx(yb), yb)])
+    return U(D(outer, inner), box(w / 2 - S / 2, 0, w / 2 + S / 2, y0 - G, br=c))
 
-@glyph("Z", W0)
+@glyph("Z", W)
 def _(w):
-    d = diag(S * 0.6, T, w - S * 0.6, H - T, w=S * 1.05)
-    return U(box(0, H - T, w, H, tl=C * 0.8), box(0, 0, w, T, br=C * 0.8), d)
+    d = clip(diag(S * 0.6, 0, w - S * 0.6, H, w=S * 1.15), w, T + G, H - T - G)
+    return U(box(0, H - T, w, H, tl=C), box(0, 0, w, T, br=C), d)
 
-# ---- digits
-@glyph("zero", WN)
+# Digits ---------------------------------------------------------------------
+WD = 700
+
+@glyph("zero", WD)
 def _(w):
-    return U(frame(w), box(w / 2 - 30, H * 0.36, w / 2 + 30, H * 0.64))
+    sl = I(diag(S + 40, T, w - S - 40, H - T, w=T * 0.8), box(S + G, T + G, w - S - G, H - T - G))
+    return U(frame(w), sl)
 
-@glyph("one", 340)
+@glyph("one", 400)
 def _(w):
-    return U(box(w - S, 0, w, H, br=c), box(0, H - T, w, H, tl=C * 0.8), box(0, H - T - 90, T, H))
+    return U(box(w - S, 0, w, H, br=c), box(0, H - T, w - S - G, H, tl=C * 0.7))
 
-@glyph("two", WN)
+@glyph("two", WD)
 def _(w):
     return D(box(0, 0, w, H, tr=C, bl=C),
              box(-1, MID1, w - S, H - T, tr=c), box(S, T, w + 1, MID0, bl=c))
 
-@glyph("three", WN)
+@glyph("three", WD)
 def _(w):
     return D(box(0, 0, w, H, tr=C, br=C),
              box(-1, MID1, w - S, H - T, tr=c), box(-1, T, w - S, MID0, br=c),
              box(-1, MID0 - 1, w * 0.3, MID1 + 1))
 
-@glyph("four", WN + 20)
+@glyph("four", WD)
 def _(w):
-    y0 = H * 0.28
-    return U(box(0, y0, S, H, tl=C * 0.8), box(0, y0, w, y0 + T), box(w - S - 40, 0, w - 40, H * 0.8, br=c))
+    y0 = H * 0.26
+    return U(box(0, y0, S, H, tl=C * 0.8), box(0, y0, w, y0 + T, br=c),
+             box(w - S * 1.6, 0, w - S * 0.6, H, br=c))
 
-@glyph("five", WN)
+@glyph("five", WD)
 def _(w):
     return D(box(0, 0, w, H, br=C),
              box(S, MID1, w + 1, H - T), box(-1, T, w - S, MID0, br=c),
              poly([(w + 1, MID1 + 1), (w + 1, MID1 - C), (w - C, MID1 + 1)]))
 
-@glyph("six", WN)
+@glyph("six", WD)
 def _(w):
     return D(box(0, 0, w, H, tl=C, br=C),
              box(S, MID1, w + 1, H - T, tl=c), box(S, T, w - S, MID0, br=c))
 
-@glyph("seven", WN + 20)
+@glyph("seven", WD)
 def _(w):
-    return U(box(0, H - T, w, H, tl=C * 0.8), clipcap(diag(w - S * 0.55, H - T, w * 0.32, -10), w))
+    return U(box(0, H - T, w, H, tl=C * 0.8),
+             clip(diag(w - S * 0.6, H - T - G, w * 0.30, -10, w=S * 1.05), w, 0, H - T - G))
 
-@glyph("eight", WN)
+@glyph("eight", WD)
 def _(w):
-    notch = lambda x, s: poly([(x, MID1 + 10), (x + s * S * 0.5, H / 2), (x, MID0 - 10)])
+    notch = lambda x, s: poly([(x, MID1 - 10), (x + s * S * 0.55, H / 2), (x, MID0 + 10)])
     return D(box(0, 0, w, H, tl=C, tr=C, br=C, bl=C),
              box(S, MID1, w - S, H - T, tl=c), box(S, T, w - S, MID0, br=c),
              notch(w + 1, -1), notch(-1, 1))
 
-@glyph("nine", WN)
+@glyph("nine", WD)
 def _(w):
     return D(box(0, 0, w, H, tl=C, br=C),
              box(S, MID1, w - S, H - T, tl=c), box(-1, T, w - S, MID0, br=c))
 
-# ---- punctuation
+# Punctuation ----------------------------------------------------------------
 @glyph("period", S)
 def _(w):
-    return box(0, 0, S, S, tl=c)
+    return box(0, 0, S, T, tl=c)
 
 @glyph("comma", S)
 def _(w):
-    return U(box(0, 0, S, S, tl=c), poly([(S * 0.35, 0), (S, 0), (S * 0.3, -150), (-S * 0.3, -150)]))
+    return U(box(0, 0, S, T, tl=c), poly([(S * 0.35, 0), (S, 0), (S * 0.3, -150), (-S * 0.3, -150)]))
 
 @glyph("colon", S)
 def _(w):
-    return U(box(0, 0, S, S, tl=c), box(0, 420, S, 420 + S, tl=c))
+    return U(box(0, 0, S, T, tl=c), box(0, 420, S, 420 + T, tl=c))
 
 @glyph("semicolon", S)
 def _(w):
-    return U(G["comma"][1], box(0, 420, S, 420 + S, tl=c))
+    return U(GL["comma"][1], box(0, 420, S, 420 + T, tl=c))
 
 @glyph("exclam", S)
 def _(w):
-    return U(box(0, 0, S, S, tl=c), box(0, S + 70, S, H, tl=C * 0.8))
+    return U(box(0, 0, S, T, tl=c), box(0, T + G * 2, S, H, tl=C * 0.8))
 
-@glyph("question", WN - 40)
+@glyph("question", 620)
 def _(w):
-    top = D(box(0, H * 0.38, w, H, tl=C, br=C * 0.7),
-            box(S, H * 0.38 + T, w - S, H - T, br=c), box(-1, H * 0.38 - 1, w - S, H * 0.38 + T))
-    return U(top, box(w / 2 - S / 2, H * 0.38, w / 2 + S / 2, H * 0.38 + T + 10),
-             box(w / 2 - S / 2, H * 0.3, w / 2 + S / 2, H * 0.4), box(w / 2 - S / 2, 0, w / 2 + S / 2, S, tl=c))
+    y = H * 0.36
+    top = D(box(0, y, w, H, tl=C, br=C * 0.7),
+            box(S, y + T, w - S, H - T, br=c), box(-1, y - 1, w - S, y + T))
+    return U(top, box(w / 2 - S / 2, y, w / 2 + S / 2, y + T + 10),
+             box(w / 2 - S / 2, T + G * 2, w / 2 + S / 2, y + 1), box(w / 2 - S / 2, 0, w / 2 + S / 2, T, tl=c))
 
-@glyph("hyphen", 340)
+@glyph("hyphen", 380)
 def _(w):
-    return box(0, MID0, w, MID1, tl=c)
+    return box(0, MID0, w, MID1, tl=c, br=c)
 
-@glyph("underscore", W0)
+@glyph("underscore", W)
 def _(w):
-    return box(0, -170, w, -170 + T)
+    return box(0, -190, w, -190 + T * 0.8)
 
-@glyph("slash", 420)
+@glyph("slash", 480)
 def _(w):
-    return clipcap(diag(S * 0.55, -60, w - S * 0.55, H + 60), w, -60, H + 60)
+    return clip(diag(S * 0.6, -60, w - S * 0.6, H + 60), w, -60, H + 60)
 
-@glyph("backslash", 420)
+@glyph("backslash", 480)
 def _(w):
-    return clipcap(diag(S * 0.55, H + 60, w - S * 0.55, -60), w, -60, H + 60)
+    return clip(diag(S * 0.6, H + 60, w - S * 0.6, -60), w, -60, H + 60)
 
-@glyph("plus", 520)
+@glyph("plus", 560)
 def _(w):
     return U(box(0, MID0, w, MID1), box(w / 2 - S / 2, H / 2 - w / 2, w / 2 + S / 2, H / 2 + w / 2))
 
-@glyph("equal", 520)
+@glyph("equal", 560)
 def _(w):
-    return U(box(0, H / 2 + 30, w, H / 2 + 30 + T, tl=c), box(0, H / 2 - 30 - T, w, H / 2 - 30, br=c))
+    return U(box(0, H / 2 + 25, w, H / 2 + 25 + T, tl=c), box(0, H / 2 - 25 - T, w, H / 2 - 25, br=c))
 
-@glyph("bracketleft", 300)
+@glyph("bracketleft", 330)
 def _(w):
     return D(box(0, -100, w, H + 100, tl=C * 0.8), box(S, -100 + T, w + 1, H + 100 - T))
 
-@glyph("bracketright", 300)
+@glyph("bracketright", 330)
 def _(w):
     return D(box(0, -100, w, H + 100, br=C * 0.8), box(-1, -100 + T, w - S, H + 100 - T))
 
-@glyph("parenleft", 280)
+@glyph("parenleft", 320)
 def _(w):
     return D(box(0, -100, w, H + 100, tl=C, bl=C), box(S, -100 + T, w + 1, H + 100 - T, tl=c, bl=c))
 
-@glyph("parenright", 280)
+@glyph("parenright", 320)
 def _(w):
     return D(box(0, -100, w, H + 100, tr=C, br=C), box(-1, -100 + T, w - S, H + 100 - T, tr=c, br=c))
 
 @glyph("quotesingle", S)
 def _(w):
-    return box(0, H - 240, S, H + 0, tl=c)
+    return box(0, H - 260, S, H, tl=c)
 
-@glyph("quotedbl", S * 2 + 60)
+@glyph("quotedbl", S * 2 + 50)
 def _(w):
-    return U(box(0, H - 240, S, H, tl=c), box(S + 60, H - 240, w, H, tl=c))
+    return U(box(0, H - 260, S, H, tl=c), box(S + 50, H - 260, w, H, tl=c))
 
-@glyph("numbersign", 640)
+@glyph("numbersign", 700)
 def _(w):
     v1 = diag(w * 0.32, 0, w * 0.42, H, w=T)
     v2 = diag(w * 0.62, 0, w * 0.72, H, w=T)
-    return clipcap(U(v1, v2, box(0, 180, w, 180 + T), box(0, 420, w, 420 + T)), w)
+    return clip(U(v1, v2, box(0, 170, w, 170 + T * 0.9), box(0, 420, w, 420 + T * 0.9)), w)
 
-@glyph("ampersand", 680)
+@glyph("ampersand", 760)
 def _(w):
-    # squared ampersand: a stacked bracket form with an outgoing arm
-    top = D(box(40, MID0, w - 180, H, tl=C, br=c), box(40 + S, MID1, w - 180 - S, H - T))
-    bot = D(box(0, 0, w - 120, MID1, tl=C * 0.6, br=C * 0.8), box(S, T, w - 120 - S, MID0, br=c),
-            box(w - 120 - S - 1, MID0 - 1, w, MID1 + 1))
-    arm = box(w - 200, MID0, w, MID1, br=c)
-    return U(top, bot, arm)
+    top = D(box(40, MID0, w - 200, H, tl=C, br=c), box(40 + S, MID1, w - 200 - S, H - T))
+    bot = D(box(0, 0, w - 130, MID1, tl=C * 0.6, br=C * 0.8), box(S, T, w - 130 - S, MID0, br=c),
+            box(w - 130 - S - 1, MID0 - 1, w, MID1 + 1))
+    return U(top, bot, box(w - 220, MID0, w, MID1, br=c))
 
-@glyph("at", 760)
+@glyph("at", 820)
 def _(w):
     outer = D(box(0, -60, w, H, tl=C, br=C), box(S * 0.8, -60 + T * 0.8, w - S * 0.8, H - T * 0.8, tl=c, br=c))
-    inner = D(box(w * 0.3, H * 0.22, w - S * 0.8 + 1, H * 0.7, tl=c), box(w * 0.3 + T * 0.8, H * 0.22 + T * 0.8, w - S * 0.8 - T * 0.8, H * 0.7 - T * 0.8))
+    inner = D(box(w * 0.3, H * 0.2, w - S * 0.8 + 1, H * 0.72, tl=c),
+              box(w * 0.3 + T * 0.8, H * 0.2 + T * 0.8, w - S * 0.8 - T * 0.8, H * 0.72 - T * 0.8))
     return U(outer, inner)
 
-@glyph("asterisk", 460)
+@glyph("asterisk", 480)
 def _(w):
-    cy = H - 170
-    arms = [box(w / 2 - 50, cy - 170, w / 2 + 50, cy + 170)]
+    cy, r, t = H - 180, 180, 55
+    arms = [box(w / 2 - t, cy - r, w / 2 + t, cy + r)]
     for ang in (60, -60):
         a = math.radians(ang)
-        dx, dy = math.sin(a) * 170, math.cos(a) * 170
-        nx, ny = math.cos(a) * 50, -math.sin(a) * 50
+        dx, dy, nx, ny = math.sin(a) * r, math.cos(a) * r, math.cos(a) * t, -math.sin(a) * t
         cx = w / 2
         arms.append(poly([(cx - dx - nx, cy - dy - ny), (cx - dx + nx, cy - dy + ny),
                           (cx + dx + nx, cy + dy + ny), (cx + dx - nx, cy + dy - ny)]))
     return U(*arms)
 
-@glyph("less", 520)
+@glyph("less", 560)
 def _(w):
-    return U(clipcap(diag(w - 40, H / 2 + 250, 60, H / 2 - 10, w=T * 1.1), w, H / 2, H / 2 + 250),
-             clipcap(diag(60, H / 2 + 10, w - 40, H / 2 - 250, w=T * 1.1), w, H / 2 - 250, H / 2))
+    return U(clip(diag(w - 40, H / 2 + 260, 60, H / 2 - 10, w=T * 1.1), w, H / 2, H / 2 + 260),
+             clip(diag(60, H / 2 + 10, w - 40, H / 2 - 260, w=T * 1.1), w, H / 2 - 260, H / 2))
 
-@glyph("greater", 520)
+@glyph("greater", 560)
 def _(w):
-    return U(clipcap(diag(40, H / 2 + 250, w - 60, H / 2 - 10, w=T * 1.1), w, H / 2, H / 2 + 250),
-             clipcap(diag(w - 60, H / 2 + 10, 40, H / 2 - 250, w=T * 1.1), w, H / 2 - 250, H / 2))
+    return U(clip(diag(40, H / 2 + 260, w - 60, H / 2 - 10, w=T * 1.1), w, H / 2, H / 2 + 260),
+             clip(diag(w - 60, H / 2 + 10, 40, H / 2 - 260, w=T * 1.1), w, H / 2 - 260, H / 2))
 
-@glyph("percent", 640)
+@glyph("percent", 700)
 def _(w):
-    o1 = D(box(0, H - 260, 230, H, tl=c), box(T * 0.8, H - 260 + T * 0.8, 230 - T * 0.8, H - T * 0.8))
-    o2 = D(box(w - 230, 0, w, 260, br=c), box(w - 230 + T * 0.8, T * 0.8, w - T * 0.8, 260 - T * 0.8))
-    return U(o1, o2, clipcap(diag(80, -20, w - 80, H + 20, w=T), w))
+    o1 = D(box(0, H - 270, 250, H, tl=c), box(T * 0.75, H - 270 + T * 0.75, 250 - T * 0.75, H - T * 0.75))
+    o2 = D(box(w - 250, 0, w, 270, br=c), box(w - 250 + T * 0.75, T * 0.75, w - T * 0.75, 270 - T * 0.75))
+    return U(o1, o2, clip(diag(90, -20, w - 90, H + 20, w=T), w))
 
-@glyph("dollar", W0)
+@glyph("dollar", W)
 def _(w):
     s = D(box(0, 40, w, H - 40, tl=C, br=C),
-          box(S, MID1, w + 1, H - 40 - T, tl=c), box(-1, 40 + T, w - S, MID0, br=c))
-    return U(s, box(w / 2 - 35, -60, w / 2 + 35, H + 60))
+          box(S, MID1, w + 1, H - 40 - T * 0.85, tl=c), box(-1, 40 + T * 0.85, w - S, MID0, br=c))
+    return U(s, box(w / 2 - 40, -70, w / 2 + 40, H + 70))
 
 @glyph("bar", S)
 def _(w):
-    return box(0, -120, S, H + 120)
+    return box(0, -130, S, H + 130)
 
 
-ALIAS = {chr(i): chr(i) for i in range(ord("A"), ord("Z") + 1)}
+LETTERS = [chr(i) for i in range(ord("A"), ord("Z") + 1)]
 NAMES = {
     "0": "zero", "1": "one", "2": "two", "3": "three", "4": "four", "5": "five", "6": "six",
     "7": "seven", "8": "eight", "9": "nine", ".": "period", ",": "comma", ":": "colon",
@@ -435,41 +469,46 @@ NAMES = {
 
 
 # ---------------------------------------------------------------- styles
-SLITS = [(176, 202), (498, 524)]  # cut between the bar levels -> striped "Slit" style
+# Slits sit in the vertical-only zones between the three bar levels.
+SLITS = [(T + 52, T + 80), (MID1 + 52, MID1 + 80)]
 
 
 def slit(p, w):
     return D(p, *[box(-300, a, w + 300, b) for a, b in SLITS])
 
 
+def glitch(p, w):
+    """Cut into horizontal bands and knock them sideways, like a torn scanline."""
+    cuts = [(-400, 232, 0), (232, 300, 70), (300, 470, -34), (470, 492, 120), (492, 1200, 18)]
+    return U(*[moved(band(p, a, b), dx) for a, b, dx in cuts])
+
+
 def to_glyph(path, dx, skew):
     path = Path(path)
     path.simplify(clockwise=True)
     pen = TTGlyphPen(None)
-    m = (1, 0, math.tan(math.radians(skew)), 1, dx, 0)
-    path.draw(TransformPen(pen, m))
+    path.draw(TransformPen(pen, (1, 0, math.tan(math.radians(skew)), 1, dx, 0)))
     return pen.glyph()
 
 
-def build(style, slitted=False, skew=0.0):
+def build(style, fx=None, skew=0.0):
     family = "Voltcut"
-    glyphs, metrics, cmap = {}, {}, {}
-    order = [".notdef", "space"] + list(G.keys())
+    glyphs, adv, cmap = {}, {}, {}
+    order = [".notdef", "space"] + list(GL.keys())
 
-    nd = D(box(0, 0, 500, H), box(60, 60, 440, H - 60))
-    glyphs[".notdef"] = to_glyph(nd, SB, skew)
-    metrics[".notdef"] = (500 + 2 * SB, SB)
+    glyphs[".notdef"] = to_glyph(D(box(0, 0, 500, H), box(60, 60, 440, H - 60)), SB, skew)
+    adv[".notdef"] = 500 + 2 * SB
     glyphs["space"] = TTGlyphPen(None).glyph()
-    metrics["space"] = (300, 0)
-    cmap[0x20] = "space"
-    cmap[0xA0] = "space"
+    adv["space"] = 280
+    cmap[0x20] = cmap[0xA0] = "space"
 
-    for name, (w, p) in G.items():
-        if slitted:
-            p = slit(p, w)
-        glyphs[name] = to_glyph(p, SB, skew)
-        metrics[name] = (int(round(w + 2 * SB)), SB)
-    for ch in ALIAS:
+    pad = 60 if fx is glitch else 0  # glitched bands stick out sideways
+    for name, (w, p) in GL.items():
+        if fx:
+            p = fx(p, w)
+        glyphs[name] = to_glyph(p, SB + pad / 2, skew)
+        adv[name] = int(round(w + 2 * SB + pad))
+    for ch in LETTERS:
         cmap[ord(ch)] = ch
         cmap[ord(ch.lower())] = ch  # all-caps design: lowercase maps to caps
     for ch, n in NAMES.items():
@@ -479,28 +518,26 @@ def build(style, slitted=False, skew=0.0):
     fb.setupGlyphOrder(order)
     fb.setupCharacterMap(cmap)
     fb.setupGlyf(glyphs)
-    # recompute lsb from real bounds
     glyf = fb.font["glyf"]
     hm = {}
     for n in order:
         g = glyf[n]
         g.recalcBounds(glyf)
-        hm[n] = (metrics[n][0], getattr(g, "xMin", 0))
+        hm[n] = (adv[n], getattr(g, "xMin", 0))
     fb.setupHorizontalMetrics(hm)
     fb.setupHorizontalHeader(ascent=900, descent=-250)
-    full = f"{family} {style}"
     ps = f"{family}-{style.replace(' ', '')}"
     fb.setupNameTable({
-        "familyName": family, "styleName": style, "uniqueFontIdentifier": f"{ps}-1.000",
-        "fullName": full, "psName": ps, "version": "Version 1.000",
+        "familyName": family, "styleName": style, "uniqueFontIdentifier": f"{ps}-2.000",
+        "fullName": f"{family} {style}", "psName": ps, "version": "Version 2.000",
         "copyright": "Copyright (c) 2026 amanedz", "licenseDescription": "SIL Open Font License 1.1",
     })
     fb.setupOS2(sTypoAscender=900, sTypoDescender=-250, sTypoLineGap=100, usWinAscent=1000,
                 usWinDescent=300, sxHeight=H, sCapHeight=H, achVendID="NONE",
-                fsSelection=(0x01 if skew else 0x40), usWeightClass=700)
+                fsSelection=(0x01 if skew else 0x40), usWeightClass=900)
     fb.setupPost(italicAngle=-skew)
-    from fontTools.misc.timeTools import timestampNow
-    fb.setupHead(unitsPerEm=UPM, macStyle=(0x2 if skew else 0) | 0x1, created=timestampNow(), modified=timestampNow())
+    fb.setupHead(unitsPerEm=UPM, macStyle=(0x2 if skew else 0) | 0x1,
+                 created=timestampNow(), modified=timestampNow())
 
     os.makedirs(OUT, exist_ok=True)
     ttf = os.path.join(OUT, f"{ps}.ttf")
@@ -508,11 +545,12 @@ def build(style, slitted=False, skew=0.0):
     f = TTFont(ttf)
     f.flavor = "woff2"
     f.save(os.path.join(OUT, f"{ps}.woff2"))
-    print("wrote", ttf, len(G), "glyphs")
+    print("wrote", ttf, len(GL), "glyphs")
 
 
 if __name__ == "__main__":
     build("Regular")
     build("Oblique", skew=12)
-    build("Slit", slitted=True)
-    build("Slit Oblique", slitted=True, skew=12)
+    build("Slit", fx=slit)
+    build("Slit Oblique", fx=slit, skew=12)
+    build("Glitch", fx=glitch)
