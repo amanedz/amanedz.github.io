@@ -197,8 +197,8 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
 
 /* ================= CONTACT ================= */
 .contact { position: relative; background: var(--night); color: var(--night-ink); padding: 96px 0 36px; overflow: hidden; isolation: isolate; }
-.contact .bigc { font-family: var(--display); font-weight: 300; font-variation-settings: "wdth" 75; font-size: clamp(56px, 12vw, 180px); line-height: .85; letter-spacing: 0.01em; margin: 0 0 36px; }
-.contact .bigc { display: inline-block; position: relative; }
+.contact .bigc { font-family: var(--display); font-weight: 300; font-variation-settings: "wdth" 75; font-size: clamp(50px, 11vw, 170px); line-height: .85; letter-spacing: 0.01em; margin: 0 0 36px; }
+.contact .bigc { display: inline-block; position: relative; margin-left: .3em; }
 .tw { position: absolute; display: block; width: var(--s); height: var(--s); margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2); pointer-events: none; }
 .tw svg { display: block; width: 100%; height: 100%; fill: var(--night-accent); filter: drop-shadow(0 0 .08em rgba(125,185,255,.45)); animation: pulse var(--d) cubic-bezier(.45,0,.55,1) var(--dl) infinite; transform-origin: 50% 50%; }
 .tw.t1 { --s: .5em;  left: .02em;  top: .14em;  --d: 2.6s; --dl: 0s; }
@@ -481,7 +481,7 @@ const BASE = reduce ? 0 : -6;
 let rot = 10, rotTarget = 10, vel = BASE;
 let dragging = false, lastX = 0, moved = 0, heroOn = true;
 let px = 0, py = 0, pxT = 0, pyT = 0;
-let sA = 0, sB = 0, scrollKick = 0, lastY = scrollY;
+let sA = 0, sB = 0;
 let tPrev = performance.now();
 
 function heroFrame(now) {
@@ -492,7 +492,6 @@ function heroFrame(now) {
     vel = approach(vel, (rot - before) / Math.max(dt, 0.001), 10, dt);
   } else {
     vel = approach(vel, BASE, 1.4, dt);
-    vel += scrollKick; scrollKick = 0;
     rot += vel * dt; rotTarget = rot;
   }
   px = approach(px, pxT, 3, dt); py = approach(py, pyT, 3, dt);
@@ -514,10 +513,10 @@ new IntersectionObserver(([e]) => {
   if (heroOn && !was) { tPrev = performance.now(); requestAnimationFrame(heroFrame); }
 }).observe(hero);
 
+let pending = false, startX = 0, startY = 0, pid = null;
 hero.addEventListener("pointerdown", (e) => {
   if (e.target.closest("a, button")) return;
-  dragging = true; moved = 0; lastX = e.clientX; rotTarget = rot; hero.classList.add("dragging");
-  hero.setPointerCapture(e.pointerId);
+  pending = true; moved = 0; startX = lastX = e.clientX; startY = e.clientY; pid = e.pointerId;
 });
 hero.addEventListener("pointermove", (e) => {
   if (e.pointerType === "mouse" && !reduce) {
@@ -525,26 +524,33 @@ hero.addEventListener("pointermove", (e) => {
     pxT = ((e.clientX - r.left) / r.width - 0.5) * 2;
     pyT = ((e.clientY - r.top) / r.height - 0.5) * 2;
   }
+  if (pending && !dragging) {
+    const ax = Math.abs(e.clientX - startX), ay = Math.abs(e.clientY - startY);
+    if (ay > 8 && ay > ax) { pending = false; return; }          // vertical swipe = page scroll, leave the ribbon alone
+    if (ax > 6 && ax > ay) {
+      dragging = true; rotTarget = rot; lastX = e.clientX; hero.classList.add("dragging");
+      try { hero.setPointerCapture(pid); } catch (_) {}
+    }
+  }
   if (!dragging) return;
   const dx = e.clientX - lastX; lastX = e.clientX; moved += Math.abs(dx);
   rotTarget += dx * 0.25;
 });
 hero.addEventListener("pointerleave", () => { pxT = 0; pyT = 0; });
 hero.addEventListener("pointerup", (e) => {
-  if (!dragging) return;
-  dragging = false; hero.classList.remove("dragging");
-  vel = clamp(vel, -260, 260);
-  if (moved < 6) {
+  const wasTap = pending && !dragging;
+  pending = false;
+  if (dragging) {
+    dragging = false; hero.classList.remove("dragging");
+    vel = clamp(vel, -200, 200);
+  }
+  if (wasTap) {
     const el = document.elementsFromPoint(e.clientX, e.clientY).find((n) => n.classList && n.classList.contains("card"));
     if (el) openViewer(+el.dataset.idx);
   }
 });
-hero.addEventListener("pointercancel", () => { dragging = false; hero.classList.remove("dragging"); });
-addEventListener("scroll", () => {
-  const y = scrollY;
-  if (!reduce) scrollKick += clamp(-(y - lastY) * 0.6, -40, 40);
-  lastY = y;
-}, { passive: true });
+hero.addEventListener("pointercancel", () => { pending = false; dragging = false; hero.classList.remove("dragging"); });
+
 
 /* ================= Wall of works ================= */
 const shelf = document.getElementById("shelf");
