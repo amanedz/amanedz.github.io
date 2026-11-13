@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>阿万音 Portfolio</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox="350 328 780 780" xmlns="http://www.w3.org/2000/svg"%3E%3Crect x="350" y="328" width="780" height="780" rx="120" fill="#1F1F1F"/%3E%3CclipPath id="f"%3E%3Cpath d="M787.8 400H964V1036H860V562L628.6 1036H477.5Z"/%3E%3C/clipPath%3E%3Cg class="mk-a" clip-path="url%28#f%29" fill="#fff"%3E%3Crect x="470" y="400" width="500" height="29" style="--i:0"/%3E%3Crect x="470" y="442" width="500" height="27" style="--i:1"/%3E%3Crect x="470" y="482" width="500" height="25" style="--i:2"/%3E%3Crect x="470" y="520" width="500" height="24" style="--i:3"/%3E%3Crect x="470" y="557" width="500" height="23" style="--i:4"/%3E%3Crect x="470" y="593" width="500" height="21" style="--i:5"/%3E%3Crect x="470" y="627" width="500" height="20" style="--i:6"/%3E%3Crect x="470" y="661" width="500" height="18" style="--i:7"/%3E%3Crect x="470" y="693" width="500" height="17" style="--i:8"/%3E%3Crect x="470" y="723" width="500" height="16" style="--i:9"/%3E%3Crect x="470" y="753" width="500" height="15" style="--i:10"/%3E%3Crect x="470" y="781" width="500" height="14" style="--i:11"/%3E%3Crect x="470" y="808" width="500" height="13" style="--i:12"/%3E%3Crect x="470" y="835" width="500" height="13" style="--i:13"/%3E%3Crect x="470" y="860" width="500" height="11" style="--i:14"/%3E%3Crect x="470" y="884" width="500" height="10" style="--i:15"/%3E%3Crect x="470" y="908" width="500" height="9" style="--i:16"/%3E%3Crect x="470" y="930" width="500" height="9" style="--i:17"/%3E%3Crect x="470" y="952" width="500" height="7" style="--i:18"/%3E%3Crect x="470" y="973" width="500" height="7" style="--i:19"/%3E%3Crect x="470" y="993" width="500" height="6" style="--i:20"/%3E%3Crect x="470" y="1012" width="500" height="6" style="--i:21"/%3E%3Crect x="470" y="1031" width="500" height="5" style="--i:22"/%3E%3C/g%3E%3Cg class="mk-t" fill="#83CFC3"%3E%3Crect class="mk-l" x="364" y="840" width="700" height="16"/%3E%3Crect class="mk-s" x="1052" y="816" width="64" height="64"/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&family=IBM+Plex+Mono:wght@400;500&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -78,7 +79,10 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
 }
 .progress { position: absolute; left: 0; right: 0; bottom: -1px; height: 1px; background: var(--night-accent); transform-origin: 0 50%; transform: scaleX(0); box-shadow: 0 0 8px var(--night-accent); }
 .logo { font-family: var(--display); font-weight: 700; font-size: 16px; letter-spacing: .04em; text-decoration: none; display: flex; align-items: center; gap: 10px; }
-.logo i { font-style: normal; color: var(--night-accent); font-size: 14px; }
+.logo .mark { height: 30px; width: auto; display: block; overflow: visible; transition: transform .6s var(--ease); }
+.logo:hover .mark { transform: translateX(3px); }
+.logo:hover .mk-s { transform: translateX(10px); }
+.mark .mk-s, .mark .mk-l { transition: transform .6s var(--ease); transform-box: fill-box; }
 .topbar nav { display: flex; gap: 8px; }
 
 .stage { position: absolute; inset: 0; perspective: 1200px; perspective-origin: 50% 46%; z-index: 2; }
@@ -146,8 +150,15 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
 }
 .intro .loader.out { clip-path: inset(0 0 100% 0); }
 @keyframes ldFail { to { visibility: hidden; } }
-.ld-in { display: flex; align-items: baseline; gap: 18px; font-family: var(--display); }
-.ld-mark { color: var(--night-accent); font-size: 22px; animation: twinkle 1.6s ease-in-out infinite; }
+.ld-in { display: flex; flex-direction: column; align-items: center; gap: 22px; font-family: var(--display); }
+.ld-row { display: flex; align-items: baseline; gap: 18px; }
+.ld-logo { width: clamp(120px, 18vw, 180px); height: auto; overflow: visible; }
+.ld-logo .mk-a rect { transform-box: fill-box; transform-origin: 0 50%; animation: ldStripe .7s var(--ease) both; animation-delay: calc(var(--i) * 28ms); }
+.ld-logo .mk-l { transform-origin: 0 50%; animation: ldLine .7s .45s var(--ease) both; }
+.ld-logo .mk-s { transform-origin: 50% 50%; animation: ldSq .5s .85s cubic-bezier(.2,1.6,.4,1) both; }
+@keyframes ldStripe { from { transform: scaleX(0); } }
+@keyframes ldLine { from { transform: scaleX(0); } }
+@keyframes ldSq { from { transform: scale(0) rotate(-90deg); } }
 .ld-name { font-family: var(--jp); font-weight: 900; font-size: clamp(28px, 5vw, 44px); letter-spacing: .08em; }
 .ld-num { font-family: var(--mono); font-size: 13px; color: rgba(236,238,241,.55); font-variant-numeric: tabular-nums; min-width: 3ch; }
 .ld-bar { position: absolute; left: 0; bottom: 0; height: 2px; width: 100%; background: var(--night-accent); transform-origin: 0 50%; transform: scaleX(0); }
@@ -258,6 +269,8 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
 .stats { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: 8px 40px; margin-top: 36px; }
 .stats b { display: block; font-family: var(--display); font-weight: 300; font-variation-settings: "wdth" 75; font-size: clamp(44px, 5vw, 72px); line-height: 1; font-variant-numeric: tabular-nums; }
 .stats span { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; color: var(--ink-soft); }
+.about .name-row { display: flex; align-items: center; gap: 20px; }
+.about .name-row .mark { height: 64px; width: auto; flex: none; overflow: visible; }
 .about .name { margin-top: 0; font-size: 22px; font-weight: 900; line-height: 1.5; }
 .about .name span { display: block; font-family: var(--mono); font-size: 12px; font-weight: 400; color: var(--ink-soft); }
 .about-text p { margin: 0 0 1.2em; max-width: 36em; }
@@ -296,6 +309,7 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
 .mail:hover { background-size: 100% 100%; color: var(--night); }
 .toast { font-family: var(--mono); font-size: 13px; color: var(--night-accent); min-height: 1em; }
 .links { display: flex; flex-wrap: wrap; gap: 8px; }
+.colophon .mark { height: 24px; width: auto; display: block; overflow: visible; }
 .colophon { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; margin-top: 72px; padding-top: 18px; border-top: 1px solid rgba(236,238,241,.2); font-family: var(--mono); font-size: 12px; color: rgba(236,238,241,.5); }
 
 /* ================= DIALOG ================= */
@@ -376,12 +390,12 @@ dialog.viewer .close { top: max(14px, env(safe-area-inset-top)); right: 14px; }
 <body>
 
 <div class="loader" id="loader" aria-hidden="true">
-  <div class="ld-in"><span class="ld-mark">✦</span><span class="ld-name">阿万音</span><span class="ld-num" id="ld-num">000</span></div>
+  <div class="ld-in"><svg class="ld-logo" viewBox="364 400 752 636" aria-hidden="true" focusable="false"><clipPath id="lgL"><path d="M787.8 400H964V1036H860V562L628.6 1036H477.5Z"/></clipPath><g class="mk-a" clip-path="url(#lgL)" fill="currentColor"><rect x="470" y="400" width="500" height="29" style="--i:0"/><rect x="470" y="442" width="500" height="27" style="--i:1"/><rect x="470" y="482" width="500" height="25" style="--i:2"/><rect x="470" y="520" width="500" height="24" style="--i:3"/><rect x="470" y="557" width="500" height="23" style="--i:4"/><rect x="470" y="593" width="500" height="21" style="--i:5"/><rect x="470" y="627" width="500" height="20" style="--i:6"/><rect x="470" y="661" width="500" height="18" style="--i:7"/><rect x="470" y="693" width="500" height="17" style="--i:8"/><rect x="470" y="723" width="500" height="16" style="--i:9"/><rect x="470" y="753" width="500" height="15" style="--i:10"/><rect x="470" y="781" width="500" height="14" style="--i:11"/><rect x="470" y="808" width="500" height="13" style="--i:12"/><rect x="470" y="835" width="500" height="13" style="--i:13"/><rect x="470" y="860" width="500" height="11" style="--i:14"/><rect x="470" y="884" width="500" height="10" style="--i:15"/><rect x="470" y="908" width="500" height="9" style="--i:16"/><rect x="470" y="930" width="500" height="9" style="--i:17"/><rect x="470" y="952" width="500" height="7" style="--i:18"/><rect x="470" y="973" width="500" height="7" style="--i:19"/><rect x="470" y="993" width="500" height="6" style="--i:20"/><rect x="470" y="1012" width="500" height="6" style="--i:21"/><rect x="470" y="1031" width="500" height="5" style="--i:22"/></g><g class="mk-t" fill="#83CFC3"><rect class="mk-l" x="364" y="840" width="700" height="16"/><rect class="mk-s" x="1052" y="816" width="64" height="64"/></g></svg><div class="ld-row"><span class="ld-name">阿万音</span><span class="ld-num" id="ld-num">000</span></div></div>
   <i class="ld-bar" id="ld-bar"></i>
 </div>
 
 <div class="topbar" id="topbar">
-  <a class="logo" href="#top"><i>✦</i>阿万音</a>
+  <a class="logo" href="#top"><svg class="mark" viewBox="364 400 752 636" aria-hidden="true" focusable="false"><clipPath id="lgT"><path d="M787.8 400H964V1036H860V562L628.6 1036H477.5Z"/></clipPath><g class="mk-a" clip-path="url(#lgT)" fill="currentColor"><rect x="470" y="400" width="500" height="29" style="--i:0"/><rect x="470" y="442" width="500" height="27" style="--i:1"/><rect x="470" y="482" width="500" height="25" style="--i:2"/><rect x="470" y="520" width="500" height="24" style="--i:3"/><rect x="470" y="557" width="500" height="23" style="--i:4"/><rect x="470" y="593" width="500" height="21" style="--i:5"/><rect x="470" y="627" width="500" height="20" style="--i:6"/><rect x="470" y="661" width="500" height="18" style="--i:7"/><rect x="470" y="693" width="500" height="17" style="--i:8"/><rect x="470" y="723" width="500" height="16" style="--i:9"/><rect x="470" y="753" width="500" height="15" style="--i:10"/><rect x="470" y="781" width="500" height="14" style="--i:11"/><rect x="470" y="808" width="500" height="13" style="--i:12"/><rect x="470" y="835" width="500" height="13" style="--i:13"/><rect x="470" y="860" width="500" height="11" style="--i:14"/><rect x="470" y="884" width="500" height="10" style="--i:15"/><rect x="470" y="908" width="500" height="9" style="--i:16"/><rect x="470" y="930" width="500" height="9" style="--i:17"/><rect x="470" y="952" width="500" height="7" style="--i:18"/><rect x="470" y="973" width="500" height="7" style="--i:19"/><rect x="470" y="993" width="500" height="6" style="--i:20"/><rect x="470" y="1012" width="500" height="6" style="--i:21"/><rect x="470" y="1031" width="500" height="5" style="--i:22"/></g><g class="mk-t" fill="#83CFC3"><rect class="mk-l" x="364" y="840" width="700" height="16"/><rect class="mk-s" x="1052" y="816" width="64" height="64"/></g></svg>阿万音</a>
   <nav aria-label="メイン">
     <a class="pill hide-sm" href="#works">WORKS</a>
     <a class="pill hide-sm" href="#about">ABOUT</a>
@@ -455,7 +469,7 @@ dialog.viewer .close { top: max(14px, env(safe-area-inset-top)); right: 14px; }
     </div>
     <div class="wrap about">
       <div class="up">
-        <p class="name">阿万音<span>Graphic Designer</span></p>
+        <div class="name-row"><svg class="mark" viewBox="364 400 752 636" role="img" aria-label="阿万音のロゴ" focusable="false"><clipPath id="lgA"><path d="M787.8 400H964V1036H860V562L628.6 1036H477.5Z"/></clipPath><g class="mk-a" clip-path="url(#lgA)" fill="currentColor"><rect x="470" y="400" width="500" height="29" style="--i:0"/><rect x="470" y="442" width="500" height="27" style="--i:1"/><rect x="470" y="482" width="500" height="25" style="--i:2"/><rect x="470" y="520" width="500" height="24" style="--i:3"/><rect x="470" y="557" width="500" height="23" style="--i:4"/><rect x="470" y="593" width="500" height="21" style="--i:5"/><rect x="470" y="627" width="500" height="20" style="--i:6"/><rect x="470" y="661" width="500" height="18" style="--i:7"/><rect x="470" y="693" width="500" height="17" style="--i:8"/><rect x="470" y="723" width="500" height="16" style="--i:9"/><rect x="470" y="753" width="500" height="15" style="--i:10"/><rect x="470" y="781" width="500" height="14" style="--i:11"/><rect x="470" y="808" width="500" height="13" style="--i:12"/><rect x="470" y="835" width="500" height="13" style="--i:13"/><rect x="470" y="860" width="500" height="11" style="--i:14"/><rect x="470" y="884" width="500" height="10" style="--i:15"/><rect x="470" y="908" width="500" height="9" style="--i:16"/><rect x="470" y="930" width="500" height="9" style="--i:17"/><rect x="470" y="952" width="500" height="7" style="--i:18"/><rect x="470" y="973" width="500" height="7" style="--i:19"/><rect x="470" y="993" width="500" height="6" style="--i:20"/><rect x="470" y="1012" width="500" height="6" style="--i:21"/><rect x="470" y="1031" width="500" height="5" style="--i:22"/></g><g class="mk-t" fill="#83CFC3"><rect class="mk-l" x="364" y="840" width="700" height="16"/><rect class="mk-s" x="1052" y="816" width="64" height="64"/></g></svg><p class="name">阿万音<span>Graphic Designer</span></p></div>
         <div class="stats" id="stats">
           <div><b data-to="works">00</b><span>WORKS</span></div>
           <div><b data-to="cats">00</b><span>CATEGORIES</span></div>
@@ -484,7 +498,7 @@ dialog.viewer .close { top: max(14px, env(safe-area-inset-top)); right: 14px; }
       <a class="mail" href="https://x.com/amanedz">@amanedz ↗</a>
       <a class="pill solid" href="https://x.com/amanedz">X でメッセージを送る</a>
     </div>
-    <div class="colophon"><span>© 2026 阿万音</span><span>✦ ✦ ✦</span></div>
+    <div class="colophon"><span>© 2026 阿万音</span><span><svg class="mark" viewBox="364 400 752 636" aria-hidden="true" focusable="false"><clipPath id="lgF"><path d="M787.8 400H964V1036H860V562L628.6 1036H477.5Z"/></clipPath><g class="mk-a" clip-path="url(#lgF)" fill="currentColor"><rect x="470" y="400" width="500" height="29" style="--i:0"/><rect x="470" y="442" width="500" height="27" style="--i:1"/><rect x="470" y="482" width="500" height="25" style="--i:2"/><rect x="470" y="520" width="500" height="24" style="--i:3"/><rect x="470" y="557" width="500" height="23" style="--i:4"/><rect x="470" y="593" width="500" height="21" style="--i:5"/><rect x="470" y="627" width="500" height="20" style="--i:6"/><rect x="470" y="661" width="500" height="18" style="--i:7"/><rect x="470" y="693" width="500" height="17" style="--i:8"/><rect x="470" y="723" width="500" height="16" style="--i:9"/><rect x="470" y="753" width="500" height="15" style="--i:10"/><rect x="470" y="781" width="500" height="14" style="--i:11"/><rect x="470" y="808" width="500" height="13" style="--i:12"/><rect x="470" y="835" width="500" height="13" style="--i:13"/><rect x="470" y="860" width="500" height="11" style="--i:14"/><rect x="470" y="884" width="500" height="10" style="--i:15"/><rect x="470" y="908" width="500" height="9" style="--i:16"/><rect x="470" y="930" width="500" height="9" style="--i:17"/><rect x="470" y="952" width="500" height="7" style="--i:18"/><rect x="470" y="973" width="500" height="7" style="--i:19"/><rect x="470" y="993" width="500" height="6" style="--i:20"/><rect x="470" y="1012" width="500" height="6" style="--i:21"/><rect x="470" y="1031" width="500" height="5" style="--i:22"/></g><g class="mk-t" fill="#83CFC3"><rect class="mk-l" x="364" y="840" width="700" height="16"/><rect class="mk-s" x="1052" y="816" width="64" height="64"/></g></svg></span></div>
   </div>
 </footer>
 
@@ -833,7 +847,7 @@ const root = document.documentElement;
 function ready() { root.classList.add("ready"); }
 if (root.classList.contains("intro")) {
   const num = document.getElementById("ld-num"), bar = document.getElementById("ld-bar"), ld = document.getElementById("loader");
-  const t0 = performance.now(), DUR = 1300;
+  const t0 = performance.now(), DUR = 1600;
   (function tick(now) {
     const t = clamp((now - t0) / DUR, 0, 1), e = 1 - Math.pow(1 - t, 3);
     num.textContent = String(Math.round(e * 100)).padStart(3, "0");
