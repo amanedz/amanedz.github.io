@@ -159,6 +159,7 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
 .ld-logo .mk-t { animation: ldT .8s .55s var(--ease) both; }
 @keyframes ldW { from { opacity: 0; transform: translate(-60px, 128px); } }
 @keyframes ldT { from { opacity: 0; transform: translate(146px, -313px); } }
+.amane { font-family: "Amane Intro", var(--jp); }
 .ld-name { font-family: "Amane Intro", var(--jp); font-weight: 900; font-size: clamp(28px, 5vw, 44px); letter-spacing: .08em; }
 .ld-num { font-family: var(--mono); font-size: 13px; color: rgba(236,238,241,.55); font-variant-numeric: tabular-nums; min-width: 3ch; }
 .ld-bar { position: absolute; left: 0; bottom: 0; height: 2px; width: 100%; background: var(--night-accent); transform-origin: 0 50%; transform: scaleX(0); }
@@ -272,7 +273,7 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
 .about .name-row { display: flex; align-items: center; gap: 20px; }
 .about .name-row .mark { height: 64px; width: auto; flex: none; overflow: visible; }
 .about .name { margin-top: 0; font-size: 22px; font-weight: 900; line-height: 1.5; }
-.about .name span { display: block; font-family: var(--mono); font-size: 12px; font-weight: 400; color: var(--ink-soft); }
+.about .name span:not(.amane) { display: block; font-family: var(--mono); font-size: 12px; font-weight: 400; color: var(--ink-soft); }
 .about-text p { margin: 0 0 1.2em; max-width: 36em; }
 .facts { display: grid; grid-template-columns: 1fr; gap: 28px 32px; margin-top: 28px; }
 .facts h4 { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--accent); margin: 0 0 10px; letter-spacing: .06em; }
@@ -395,7 +396,7 @@ dialog.viewer .close { top: max(14px, env(safe-area-inset-top)); right: 14px; }
 </div>
 
 <div class="topbar" id="topbar">
-  <a class="logo" href="#top"><svg class="mark" viewBox="600 611 736 782" aria-hidden="true" focusable="false"><path class="mk-w" fill="#F2F2EF" d="M965.5 611H1335.5V1393H1142V767L850.5 1393H600.5Z"/><path class="mk-t" fill="#69BAC9" d="M996.5 1080H1142L997 1393H850.5Z"/></svg>阿万音</a>
+  <a class="logo" href="#top"><svg class="mark" viewBox="600 611 736 782" aria-hidden="true" focusable="false"><path class="mk-w" fill="#F2F2EF" d="M965.5 611H1335.5V1393H1142V767L850.5 1393H600.5Z"/><path class="mk-t" fill="#69BAC9" d="M996.5 1080H1142L997 1393H850.5Z"/></svg><span class="amane">阿万音</span></a>
   <nav aria-label="メイン">
     <a class="pill hide-sm" href="#works">WORKS</a>
     <a class="pill hide-sm" href="#about">ABOUT</a>
@@ -417,7 +418,7 @@ dialog.viewer .close { top: max(14px, env(safe-area-inset-top)); right: 14px; }
   <p class="big b" id="bigB" aria-hidden="true"><b class="rv">DESIGNER.</b></p>
 
   <div class="hero-foot">
-    <p><strong>阿万音 — Graphic Designer</strong>ポスター、ロゴ、SNSヘッダー。ジャンルの境界を越えて、一枚ごとに世界をつくる。次に描くのは、まだ誰も見ていない領域。</p>
+    <p><strong><span class="amane">阿万音</span> — Graphic Designer</strong>ポスター、ロゴ、SNSヘッダー。ジャンルの境界を越えて、一枚ごとに世界をつくる。次に描くのは、まだ誰も見ていない領域。</p>
     <div class="hint">
       <div class="barcode" id="barcode" aria-hidden="true"></div>
       <span>DRAG TO SPIN ⟲</span>
@@ -469,7 +470,7 @@ dialog.viewer .close { top: max(14px, env(safe-area-inset-top)); right: 14px; }
     </div>
     <div class="wrap about">
       <div class="up">
-        <div class="name-row"><svg class="mark" viewBox="600 611 736 782" role="img" aria-label="阿万音のロゴ" focusable="false"><path class="mk-w" fill="#F2F2EF" d="M965.5 611H1335.5V1393H1142V767L850.5 1393H600.5Z"/><path class="mk-t" fill="#69BAC9" d="M996.5 1080H1142L997 1393H850.5Z"/></svg><p class="name">阿万音<span>Graphic Designer</span></p></div>
+        <div class="name-row"><svg class="mark" viewBox="600 611 736 782" role="img" aria-label="阿万音のロゴ" focusable="false"><path class="mk-w" fill="#F2F2EF" d="M965.5 611H1335.5V1393H1142V767L850.5 1393H600.5Z"/><path class="mk-t" fill="#69BAC9" d="M996.5 1080H1142L997 1393H850.5Z"/></svg><p class="name"><span class="amane">阿万音</span><span>Graphic Designer</span></p></div>
         <div class="stats" id="stats">
           <div><b data-to="works">00</b><span>WORKS</span></div>
           <div><b data-to="cats">00</b><span>CATEGORIES</span></div>
@@ -498,7 +499,7 @@ dialog.viewer .close { top: max(14px, env(safe-area-inset-top)); right: 14px; }
       <a class="mail" href="https://x.com/amanedz">@amanedz ↗</a>
       <a class="pill solid" href="https://x.com/amanedz">X でメッセージを送る</a>
     </div>
-    <div class="colophon"><span>© 2026 阿万音</span><span><svg class="mark" viewBox="600 611 736 782" aria-hidden="true" focusable="false"><path class="mk-w" fill="#F2F2EF" d="M965.5 611H1335.5V1393H1142V767L850.5 1393H600.5Z"/><path class="mk-t" fill="#69BAC9" d="M996.5 1080H1142L997 1393H850.5Z"/></svg></span></div>
+    <div class="colophon"><span>© 2026 <span class="amane">阿万音</span></span><span><svg class="mark" viewBox="600 611 736 782" aria-hidden="true" focusable="false"><path class="mk-w" fill="#F2F2EF" d="M965.5 611H1335.5V1393H1142V767L850.5 1393H600.5Z"/><path class="mk-t" fill="#69BAC9" d="M996.5 1080H1142L997 1393H850.5Z"/></svg></span></div>
   </div>
 </footer>
 
