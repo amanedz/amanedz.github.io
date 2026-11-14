@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>阿万音 Portfolio</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox="350 328 780 780" xmlns="http://www.w3.org/2000/svg"%3E%3Crect x="350" y="328" width="780" height="780" rx="120" fill="#1F1F1F"/%3E%3CclipPath id="f"%3E%3Cpath d="M787.8 400H964V1036H860V562L628.6 1036H477.5Z"/%3E%3C/clipPath%3E%3Cg class="mk-a" clip-path="url%28#f%29" fill="#fff"%3E%3Crect x="470" y="400" width="500" height="29" style="--i:0"/%3E%3Crect x="470" y="442" width="500" height="27" style="--i:1"/%3E%3Crect x="470" y="482" width="500" height="25" style="--i:2"/%3E%3Crect x="470" y="520" width="500" height="24" style="--i:3"/%3E%3Crect x="470" y="557" width="500" height="23" style="--i:4"/%3E%3Crect x="470" y="593" width="500" height="21" style="--i:5"/%3E%3Crect x="470" y="627" width="500" height="20" style="--i:6"/%3E%3Crect x="470" y="661" width="500" height="18" style="--i:7"/%3E%3Crect x="470" y="693" width="500" height="17" style="--i:8"/%3E%3Crect x="470" y="723" width="500" height="16" style="--i:9"/%3E%3Crect x="470" y="753" width="500" height="15" style="--i:10"/%3E%3Crect x="470" y="781" width="500" height="14" style="--i:11"/%3E%3Crect x="470" y="808" width="500" height="13" style="--i:12"/%3E%3Crect x="470" y="835" width="500" height="13" style="--i:13"/%3E%3Crect x="470" y="860" width="500" height="11" style="--i:14"/%3E%3Crect x="470" y="884" width="500" height="10" style="--i:15"/%3E%3Crect x="470" y="908" width="500" height="9" style="--i:16"/%3E%3Crect x="470" y="930" width="500" height="9" style="--i:17"/%3E%3Crect x="470" y="952" width="500" height="7" style="--i:18"/%3E%3Crect x="470" y="973" width="500" height="7" style="--i:19"/%3E%3Crect x="470" y="993" width="500" height="6" style="--i:20"/%3E%3Crect x="470" y="1012" width="500" height="6" style="--i:21"/%3E%3Crect x="470" y="1031" width="500" height="5" style="--i:22"/%3E%3C/g%3E%3Cg class="mk-t" fill="#83CFC3"%3E%3Crect class="mk-l" x="364" y="840" width="700" height="16"/%3E%3Crect class="mk-s" x="1052" y="816" width="64" height="64"/%3E%3C/g%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='468 502 1000 1000'%3E%3Crect x='468' y='502' width='1000' height='1000' rx='160' fill='%230B0B0B'/%3E%3Cpath fill='%23F2F2EF' d='M965.5 611H1335.5V1393H1142V767L850.5 1393H600.5Z'/%3E%3Cpath fill='%2369BAC9' d='M996.5 1080H1142L997 1393H850.5Z'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&family=IBM+Plex+Mono:wght@400;500&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -17,10 +17,10 @@
   --ink: #ECEEF1;
   --ink-soft: #8A929C;
   --rule: #262A31;
-  --accent: #83CFC3;
+  --accent: #69BAC9;
   --night: #08090B;
   --night-ink: #ECEEF1;
-  --night-accent: #83CFC3;
+  --night-accent: #69BAC9;
   --display: "Bricolage Grotesque", "Zen Kaku Gothic New", system-ui, sans-serif;
   --jp: "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
@@ -58,7 +58,7 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
 /* ================= HERO: orbiting ribbon ================= */
 .hero {
   position: relative; color: var(--night-ink);
-  background: radial-gradient(70% 60% at 50% 48%, #0F1E1D 0%, var(--night) 72%);
+  background: radial-gradient(70% 60% at 50% 48%, #0E1C20 0%, var(--night) 72%);
   height: 100vh; height: 100svh; min-height: 560px; overflow: hidden; isolation: isolate;
   touch-action: pan-y; cursor: grab; user-select: none; -webkit-user-select: none;
 }
@@ -81,8 +81,8 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
 .logo { font-family: var(--display); font-weight: 700; font-size: 16px; letter-spacing: .04em; text-decoration: none; display: flex; align-items: center; gap: 10px; }
 .logo .mark { height: 30px; width: auto; display: block; overflow: visible; transition: transform .6s var(--ease); }
 .logo:hover .mark { transform: translateX(3px); }
-.logo:hover .mk-s { transform: translateX(10px); }
-.mark .mk-s, .mark .mk-l { transition: transform .6s var(--ease); transform-box: fill-box; }
+.logo:hover .mk-t { transform: translate(-14px, 30px); }
+.mark .mk-t { transition: transform .6s var(--ease); }
 .topbar nav { display: flex; gap: 8px; }
 
 .stage { position: absolute; inset: 0; perspective: 1200px; perspective-origin: 50% 46%; z-index: 2; }
@@ -153,12 +153,10 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
 .ld-in { display: flex; flex-direction: column; align-items: center; gap: 22px; font-family: var(--display); }
 .ld-row { display: flex; align-items: baseline; gap: 18px; }
 .ld-logo { width: clamp(120px, 18vw, 180px); height: auto; overflow: visible; }
-.ld-logo .mk-a rect { transform-box: fill-box; transform-origin: 0 50%; animation: ldStripe .7s var(--ease) both; animation-delay: calc(var(--i) * 28ms); }
-.ld-logo .mk-l { transform-origin: 0 50%; animation: ldLine .7s .45s var(--ease) both; }
-.ld-logo .mk-s { transform-origin: 50% 50%; animation: ldSq .5s .85s cubic-bezier(.2,1.6,.4,1) both; }
-@keyframes ldStripe { from { transform: scaleX(0); } }
-@keyframes ldLine { from { transform: scaleX(0); } }
-@keyframes ldSq { from { transform: scale(0) rotate(-90deg); } }
+.ld-logo .mk-w { animation: ldW .9s var(--ease) both; }
+.ld-logo .mk-t { animation: ldT .8s .55s var(--ease) both; }
+@keyframes ldW { from { opacity: 0; transform: translate(-60px, 128px); } }
+@keyframes ldT { from { opacity: 0; transform: translate(146px, -313px); } }
 .ld-name { font-family: var(--jp); font-weight: 900; font-size: clamp(28px, 5vw, 44px); letter-spacing: .08em; }
 .ld-num { font-family: var(--mono); font-size: 13px; color: rgba(236,238,241,.55); font-variant-numeric: tabular-nums; min-width: 3ch; }
 .ld-bar { position: absolute; left: 0; bottom: 0; height: 2px; width: 100%; background: var(--night-accent); transform-origin: 0 50%; transform: scaleX(0); }
@@ -223,7 +221,7 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
   -webkit-box-reflect: below 10px linear-gradient(transparent 74%, rgba(255,255,255,.2));
   transition: box-shadow .6s ease;
 }
-.book.active .cover { box-shadow: 0 40px 80px -30px rgba(131,207,195,.35), 0 0 0 1px rgba(131,207,195,.3); }
+.book.active .cover { box-shadow: 0 40px 80px -30px rgba(105,186,201,.35), 0 0 0 1px rgba(105,186,201,.3); }
 .book .cover img { width: 100%; height: 100%; object-fit: cover; -webkit-user-drag: none; pointer-events: none; }
 .book:not(.active) { filter: saturate(.7) brightness(.55); }
 .book:not(.active):hover { filter: none; }
@@ -284,7 +282,7 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
 .contact .bigc { font-family: var(--display); font-weight: 300; font-variation-settings: "wdth" 75; font-size: clamp(50px, 11vw, 170px); line-height: .85; letter-spacing: 0.01em; margin: 0 0 36px; }
 .contact .bigc { display: inline-block; position: relative; margin-left: .3em; }
 .tw { position: absolute; display: block; width: var(--s); height: var(--s); margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2); pointer-events: none; }
-.tw svg { display: block; width: 100%; height: 100%; fill: var(--night-accent); filter: drop-shadow(0 0 .08em rgba(131,207,195,.45)); animation: pulse var(--d) cubic-bezier(.45,0,.55,1) var(--dl) infinite; transform-origin: 50% 50%; }
+.tw svg { display: block; width: 100%; height: 100%; fill: var(--night-accent); filter: drop-shadow(0 0 .08em rgba(105,186,201,.45)); animation: pulse var(--d) cubic-bezier(.45,0,.55,1) var(--dl) infinite; transform-origin: 50% 50%; }
 .tw.t1 { --s: .5em;  left: .02em;  top: .14em;  --d: 2.6s; --dl: 0s; }
 .tw.t2 { --s: .19em; left: -.06em; top: -.12em; --d: 1.9s; --dl: -.7s; }
 .tw.t3 { --s: .16em; left: .3em;   top: -.24em; --d: 2.2s; --dl: -1.3s; }
@@ -299,7 +297,7 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
 .contact .bigc { color: var(--night-ink); }
 .contact .bigc .o {
   color: transparent; -webkit-background-clip: text; background-clip: text; font-weight: 700;
-  background-image: linear-gradient(100deg, var(--night-ink) 0%, var(--night-accent) 35%, #D2F5EE 50%, var(--night-accent) 65%, var(--night-ink) 100%);
+  background-image: linear-gradient(100deg, var(--night-ink) 0%, var(--night-accent) 35%, #D4EEF3 50%, var(--night-accent) 65%, var(--night-ink) 100%);
   background-size: 300% 100%; background-position: 100% 0; transition: background-position 1.6s var(--ease);
 }
 .contact:hover .bigc .o { background-position: 0 0; }
@@ -390,12 +388,12 @@ dialog.viewer .close { top: max(14px, env(safe-area-inset-top)); right: 14px; }
 <body>
 
 <div class="loader" id="loader" aria-hidden="true">
-  <div class="ld-in"><svg class="ld-logo" viewBox="364 400 752 636" aria-hidden="true" focusable="false"><clipPath id="lgL"><path d="M787.8 400H964V1036H860V562L628.6 1036H477.5Z"/></clipPath><g class="mk-a" clip-path="url(#lgL)" fill="currentColor"><rect x="470" y="400" width="500" height="29" style="--i:0"/><rect x="470" y="442" width="500" height="27" style="--i:1"/><rect x="470" y="482" width="500" height="25" style="--i:2"/><rect x="470" y="520" width="500" height="24" style="--i:3"/><rect x="470" y="557" width="500" height="23" style="--i:4"/><rect x="470" y="593" width="500" height="21" style="--i:5"/><rect x="470" y="627" width="500" height="20" style="--i:6"/><rect x="470" y="661" width="500" height="18" style="--i:7"/><rect x="470" y="693" width="500" height="17" style="--i:8"/><rect x="470" y="723" width="500" height="16" style="--i:9"/><rect x="470" y="753" width="500" height="15" style="--i:10"/><rect x="470" y="781" width="500" height="14" style="--i:11"/><rect x="470" y="808" width="500" height="13" style="--i:12"/><rect x="470" y="835" width="500" height="13" style="--i:13"/><rect x="470" y="860" width="500" height="11" style="--i:14"/><rect x="470" y="884" width="500" height="10" style="--i:15"/><rect x="470" y="908" width="500" height="9" style="--i:16"/><rect x="470" y="930" width="500" height="9" style="--i:17"/><rect x="470" y="952" width="500" height="7" style="--i:18"/><rect x="470" y="973" width="500" height="7" style="--i:19"/><rect x="470" y="993" width="500" height="6" style="--i:20"/><rect x="470" y="1012" width="500" height="6" style="--i:21"/><rect x="470" y="1031" width="500" height="5" style="--i:22"/></g><g class="mk-t" fill="#83CFC3"><rect class="mk-l" x="364" y="840" width="700" height="16"/><rect class="mk-s" x="1052" y="816" width="64" height="64"/></g></svg><div class="ld-row"><span class="ld-name">阿万音</span><span class="ld-num" id="ld-num">000</span></div></div>
+  <div class="ld-in"><svg class="ld-logo" viewBox="600 611 736 782" aria-hidden="true" focusable="false"><path class="mk-w" fill="#F2F2EF" d="M965.5 611H1335.5V1393H1142V767L850.5 1393H600.5Z"/><path class="mk-t" fill="#69BAC9" d="M996.5 1080H1142L997 1393H850.5Z"/></svg><div class="ld-row"><span class="ld-name">阿万音</span><span class="ld-num" id="ld-num">000</span></div></div>
   <i class="ld-bar" id="ld-bar"></i>
 </div>
 
 <div class="topbar" id="topbar">
-  <a class="logo" href="#top"><svg class="mark" viewBox="364 400 752 636" aria-hidden="true" focusable="false"><clipPath id="lgT"><path d="M787.8 400H964V1036H860V562L628.6 1036H477.5Z"/></clipPath><g class="mk-a" clip-path="url(#lgT)" fill="currentColor"><rect x="470" y="400" width="500" height="29" style="--i:0"/><rect x="470" y="442" width="500" height="27" style="--i:1"/><rect x="470" y="482" width="500" height="25" style="--i:2"/><rect x="470" y="520" width="500" height="24" style="--i:3"/><rect x="470" y="557" width="500" height="23" style="--i:4"/><rect x="470" y="593" width="500" height="21" style="--i:5"/><rect x="470" y="627" width="500" height="20" style="--i:6"/><rect x="470" y="661" width="500" height="18" style="--i:7"/><rect x="470" y="693" width="500" height="17" style="--i:8"/><rect x="470" y="723" width="500" height="16" style="--i:9"/><rect x="470" y="753" width="500" height="15" style="--i:10"/><rect x="470" y="781" width="500" height="14" style="--i:11"/><rect x="470" y="808" width="500" height="13" style="--i:12"/><rect x="470" y="835" width="500" height="13" style="--i:13"/><rect x="470" y="860" width="500" height="11" style="--i:14"/><rect x="470" y="884" width="500" height="10" style="--i:15"/><rect x="470" y="908" width="500" height="9" style="--i:16"/><rect x="470" y="930" width="500" height="9" style="--i:17"/><rect x="470" y="952" width="500" height="7" style="--i:18"/><rect x="470" y="973" width="500" height="7" style="--i:19"/><rect x="470" y="993" width="500" height="6" style="--i:20"/><rect x="470" y="1012" width="500" height="6" style="--i:21"/><rect x="470" y="1031" width="500" height="5" style="--i:22"/></g><g class="mk-t" fill="#83CFC3"><rect class="mk-l" x="364" y="840" width="700" height="16"/><rect class="mk-s" x="1052" y="816" width="64" height="64"/></g></svg>阿万音</a>
+  <a class="logo" href="#top"><svg class="mark" viewBox="600 611 736 782" aria-hidden="true" focusable="false"><path class="mk-w" fill="#F2F2EF" d="M965.5 611H1335.5V1393H1142V767L850.5 1393H600.5Z"/><path class="mk-t" fill="#69BAC9" d="M996.5 1080H1142L997 1393H850.5Z"/></svg>阿万音</a>
   <nav aria-label="メイン">
     <a class="pill hide-sm" href="#works">WORKS</a>
     <a class="pill hide-sm" href="#about">ABOUT</a>
@@ -469,7 +467,7 @@ dialog.viewer .close { top: max(14px, env(safe-area-inset-top)); right: 14px; }
     </div>
     <div class="wrap about">
       <div class="up">
-        <div class="name-row"><svg class="mark" viewBox="364 400 752 636" role="img" aria-label="阿万音のロゴ" focusable="false"><clipPath id="lgA"><path d="M787.8 400H964V1036H860V562L628.6 1036H477.5Z"/></clipPath><g class="mk-a" clip-path="url(#lgA)" fill="currentColor"><rect x="470" y="400" width="500" height="29" style="--i:0"/><rect x="470" y="442" width="500" height="27" style="--i:1"/><rect x="470" y="482" width="500" height="25" style="--i:2"/><rect x="470" y="520" width="500" height="24" style="--i:3"/><rect x="470" y="557" width="500" height="23" style="--i:4"/><rect x="470" y="593" width="500" height="21" style="--i:5"/><rect x="470" y="627" width="500" height="20" style="--i:6"/><rect x="470" y="661" width="500" height="18" style="--i:7"/><rect x="470" y="693" width="500" height="17" style="--i:8"/><rect x="470" y="723" width="500" height="16" style="--i:9"/><rect x="470" y="753" width="500" height="15" style="--i:10"/><rect x="470" y="781" width="500" height="14" style="--i:11"/><rect x="470" y="808" width="500" height="13" style="--i:12"/><rect x="470" y="835" width="500" height="13" style="--i:13"/><rect x="470" y="860" width="500" height="11" style="--i:14"/><rect x="470" y="884" width="500" height="10" style="--i:15"/><rect x="470" y="908" width="500" height="9" style="--i:16"/><rect x="470" y="930" width="500" height="9" style="--i:17"/><rect x="470" y="952" width="500" height="7" style="--i:18"/><rect x="470" y="973" width="500" height="7" style="--i:19"/><rect x="470" y="993" width="500" height="6" style="--i:20"/><rect x="470" y="1012" width="500" height="6" style="--i:21"/><rect x="470" y="1031" width="500" height="5" style="--i:22"/></g><g class="mk-t" fill="#83CFC3"><rect class="mk-l" x="364" y="840" width="700" height="16"/><rect class="mk-s" x="1052" y="816" width="64" height="64"/></g></svg><p class="name">阿万音<span>Graphic Designer</span></p></div>
+        <div class="name-row"><svg class="mark" viewBox="600 611 736 782" role="img" aria-label="阿万音のロゴ" focusable="false"><path class="mk-w" fill="#F2F2EF" d="M965.5 611H1335.5V1393H1142V767L850.5 1393H600.5Z"/><path class="mk-t" fill="#69BAC9" d="M996.5 1080H1142L997 1393H850.5Z"/></svg><p class="name">阿万音<span>Graphic Designer</span></p></div>
         <div class="stats" id="stats">
           <div><b data-to="works">00</b><span>WORKS</span></div>
           <div><b data-to="cats">00</b><span>CATEGORIES</span></div>
@@ -498,7 +496,7 @@ dialog.viewer .close { top: max(14px, env(safe-area-inset-top)); right: 14px; }
       <a class="mail" href="https://x.com/amanedz">@amanedz ↗</a>
       <a class="pill solid" href="https://x.com/amanedz">X でメッセージを送る</a>
     </div>
-    <div class="colophon"><span>© 2026 阿万音</span><span><svg class="mark" viewBox="364 400 752 636" aria-hidden="true" focusable="false"><clipPath id="lgF"><path d="M787.8 400H964V1036H860V562L628.6 1036H477.5Z"/></clipPath><g class="mk-a" clip-path="url(#lgF)" fill="currentColor"><rect x="470" y="400" width="500" height="29" style="--i:0"/><rect x="470" y="442" width="500" height="27" style="--i:1"/><rect x="470" y="482" width="500" height="25" style="--i:2"/><rect x="470" y="520" width="500" height="24" style="--i:3"/><rect x="470" y="557" width="500" height="23" style="--i:4"/><rect x="470" y="593" width="500" height="21" style="--i:5"/><rect x="470" y="627" width="500" height="20" style="--i:6"/><rect x="470" y="661" width="500" height="18" style="--i:7"/><rect x="470" y="693" width="500" height="17" style="--i:8"/><rect x="470" y="723" width="500" height="16" style="--i:9"/><rect x="470" y="753" width="500" height="15" style="--i:10"/><rect x="470" y="781" width="500" height="14" style="--i:11"/><rect x="470" y="808" width="500" height="13" style="--i:12"/><rect x="470" y="835" width="500" height="13" style="--i:13"/><rect x="470" y="860" width="500" height="11" style="--i:14"/><rect x="470" y="884" width="500" height="10" style="--i:15"/><rect x="470" y="908" width="500" height="9" style="--i:16"/><rect x="470" y="930" width="500" height="9" style="--i:17"/><rect x="470" y="952" width="500" height="7" style="--i:18"/><rect x="470" y="973" width="500" height="7" style="--i:19"/><rect x="470" y="993" width="500" height="6" style="--i:20"/><rect x="470" y="1012" width="500" height="6" style="--i:21"/><rect x="470" y="1031" width="500" height="5" style="--i:22"/></g><g class="mk-t" fill="#83CFC3"><rect class="mk-l" x="364" y="840" width="700" height="16"/><rect class="mk-s" x="1052" y="816" width="64" height="64"/></g></svg></span></div>
+    <div class="colophon"><span>© 2026 阿万音</span><span><svg class="mark" viewBox="600 611 736 782" aria-hidden="true" focusable="false"><path class="mk-w" fill="#F2F2EF" d="M965.5 611H1335.5V1393H1142V767L850.5 1393H600.5Z"/><path class="mk-t" fill="#69BAC9" d="M996.5 1080H1142L997 1393H850.5Z"/></svg></span></div>
   </div>
 </footer>
 
