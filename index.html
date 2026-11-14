@@ -142,6 +142,8 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
 @keyframes mq { to { transform: translateX(-50%); } }
 
 /* ================= LOADER ================= */
+/* Intro name face: WenQuanYi Zen Hei, subset to 3 glyphs (GPL-2 with font embedding exception) */
+@font-face { font-family: "Amane Intro"; src: url(data:font/woff2;base64,d09GMgABAAAAAARUABEAAAAAB+AAAAP8AADmZgAAAAAAAAAAAAAAAAAAAAAAAAAAGhYbIBwgBlYARAgEERAKhEiDcAE2AiQDDAsKAAQgBYUOByAXJBgMG1cGKI7RY0diyEhkhBwMcY2MiQDSg5rN5iBW11Hs6I7Wg6qETK1pewlfUuRLChwkLAZK7pEsyMonVq17RsWS3U/n/5p68XwFFGnNfrdIW//dEqM00gY80OEEopISZL6mEQzAp26MsH4CpEst0SNDjkQ/ooD8gEQQREFAXuUNgtq0s3gAQQpZBrgahjvhL6zcyVbUC6yG8uFHtQORRM7ISLntV/+xC06g6Ibf/CeyM7ZI/CAwAAGQIKI4tAAGjPRMbrkldMu1Sb75T5bl1LN/T7w/oRlALEHV5CAgDoHCoAFFHEvqgPPCF4nvMVp54JqDVI5quXvTgfz0FJNrcsi7zLN78G1S03L/joF3YLICQ97qc023/cLYxTeHKw0mv/We54Lu3Q8X4TgyyRvyjsyRf5lme+9DUsNy/ZaeRzrMXsEN337ZwVfHh+WVb8wlzrvQRgFHuvu88lafkQtTh8ef+3e97ueHhy5K9sSgCyV5Q/6dq4QQTC6+qZOpIXWa3fALthPebtKMaBg+Onlips/VcSDkNzK/AoOq+/3kt/vWKGc/tlGhate+Wdpcev6n1TePDlckJybDX62ZXKlp72JY3VJ+W958a3NsZeTayBb7ORHsUsPTCJ60j9SnH27JBBWpdFmwLlienW1p/kQi/zo87sHe7wKUlzjTd6b/vsvdG92mHWgrxmG1XI9fXFp3Bztr6OgZyryDpztS5TDZZXGHxWdbfNYOdMx2u1Ft20uVd9vpr6FvK8v1UTn9Iy2tzzhU7ZzCecDwqPSVSTZreprJ/t2iKa+Q/vlBHeZ5IBaHu3fryrttA//qvFNUr1cvsC7WL27++F4W5hrPeYeJlsASQNFsLb4TMRpkq/GT2KnwvtUyIPhm3Cnquc/Dm5r8llueAnh8a9b30GG28P/XUk58j9wSENiwlteQtK8HmlUAxC6dhBmoKVCUQCsIaRhrwjNFoRAEtECDkyCPKdBCmgcvqLCDqh6yEwX9wo4G+Z+fOtk5lA8+dk4VQ4VdQJuwZtqCOoS3tLZoybqKoryCGsSEtEmQdipKWrBMQ+hoeQicAX5ZxfxoHQ76ECqLoq+4YhflIDwq6quqyRZKFQz6yWZKVREsEGkMA40QLJhBhu6VNA8yh0UnpL4YA8xyV/RJbukIFzVmIH2ogQFsqF/kkpVXNyepQjdfXwOiIs+7VRYaBoQIQlW4tcwCZrGVzsLAzF1QLcVoOLhshShkOD0HCxbEqqKaAkQuLD8ia17KmZH5DFmDsibtXFKbCgpqhb5EhI6uApp8ctbRFnbSpf9fO0eAc4l0eUvm0CgfnTcHDWRlsdmXQmGoOv8tFEnP7Lz293Z8j8AEklRyDIj2EjENAA==) format("woff2"); font-weight: 400; font-display: block; unicode-range: U+963F, U+4E07, U+97F3; }
 .loader { display: none; }
 .intro .loader {
   display: grid; place-items: center; position: fixed; inset: 0; z-index: 100; background: var(--night); color: var(--night-ink);
@@ -157,7 +159,7 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
 .ld-logo .mk-t { animation: ldT .8s .55s var(--ease) both; }
 @keyframes ldW { from { opacity: 0; transform: translate(-60px, 128px); } }
 @keyframes ldT { from { opacity: 0; transform: translate(146px, -313px); } }
-.ld-name { font-family: var(--jp); font-weight: 900; font-size: clamp(28px, 5vw, 44px); letter-spacing: .08em; }
+.ld-name { font-family: "Amane Intro", var(--jp); font-weight: 900; font-size: clamp(28px, 5vw, 44px); letter-spacing: .08em; }
 .ld-num { font-family: var(--mono); font-size: 13px; color: rgba(236,238,241,.55); font-variant-numeric: tabular-nums; min-width: 3ch; }
 .ld-bar { position: absolute; left: 0; bottom: 0; height: 2px; width: 100%; background: var(--night-accent); transform-origin: 0 50%; transform: scaleX(0); }
 
